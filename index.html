@@ -91,8 +91,8 @@
     </style>
 </head>
 <body>
-    <h1>Квест: Подпишись и получи <a href="https://dimapyjava.vercel.app/">СЕКРЕТНЫЙ КОД!</a></h1>
-    <p>Подпишись на все наши социальные сети, чтобы получить ссылку на Telegram-канал!</p>
+    <h1>Квест: Подпишись и получи <a href="https://dimapyjava.vercel.app/">СЕКРЕТНЫЙ КОД</a>!</h1>
+    <p>Подпишись на все наши социальные сети, чтобы получить ссылку на Telegram бота для проверки квестов!</p>
 
     <div class="social-buttons">
         <a href="https://pikabu.ru/@DimaPyJava" target="_blank" id="vk-button">Подписаться на Pikabu</a>
@@ -100,7 +100,7 @@
         <a href="https://youtube.com/ваш_аккаунт" target="_blank" id="youtube-button">Подписаться на YouTube</a>
     </div>
 
-    <button id="get-link">Получить ссылку на проверку</button>
+    <button id="get-link">Получить ссылку на Telegram бота</button>
 
     <div class="telegram-link" id="telegram-link">
         <p>Ваша ссылка: <a href="@dimapyjava_check_bot" target="_blank">https://t.me/@dimapyjava_check_bot</a></p>
@@ -113,16 +113,30 @@
 
         let clickedButtons = 0;
 
-        buttons.forEach(button => {
-            button.addEventListener('click', (e) => {
+        // Проверяем, есть ли сохраненные данные в localStorage
+        if (localStorage.getItem('clickedButtons')) {
+            clickedButtons = parseInt(localStorage.getItem('clickedButtons'), 10);
+            buttons.forEach((button, index) => {
+                if (localStorage.getItem(`button${index}`) === 'clicked') {
+                    button.classList.add('clicked');
+                }
+            });
+            if (clickedButtons === buttons.length) {
+                getLinkButton.classList.add('active');
+            }
+        }
+
+        buttons.forEach((button, index) => {
+            button.addEventListener('click', () => {
                 if (!button.classList.contains('clicked')) {
                     button.classList.add('clicked');
                     clickedButtons++;
+                    localStorage.setItem(`button${index}`, 'clicked'); // Сохраняем состояние кнопки
+                    localStorage.setItem('clickedButtons', clickedButtons); // Сохраняем количество нажатых кнопок
                 }
                 if (clickedButtons === buttons.length) {
                     getLinkButton.classList.add('active');
                 }
-                e.preventDefault(); // Отменяем переход по ссылке для демонстрации
             });
         });
 
